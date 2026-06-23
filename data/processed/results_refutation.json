@@ -1,0 +1,56 @@
+{
+  "data_mode": "demo-synthetic",
+  "seed": 20260615,
+  "placebo": {
+    "conventional_curve_residual": {
+      "mean_bp": 1.1788123373947434e-07,
+      "ci_lo_bp": -0.0018032929779865467,
+      "ci_hi_bp": 0.0018857659265989072,
+      "n": 8284,
+      "ci_spans_zero": true
+    },
+    "green_curve_residual": {
+      "mean_bp": -3.040281291665963,
+      "ci_lo_bp": -3.0725246153780224,
+      "ci_hi_bp": -3.008377487954997,
+      "n": 8284,
+      "ci_spans_zero": false
+    },
+    "similar_maturity_conv_pseudo_spread": {
+      "mean_bp": -0.11111102741808074,
+      "ci_lo_bp": -0.8582141231420143,
+      "ci_hi_bp": 0.6676908339350385,
+      "n": 4652,
+      "ci_spans_zero": true
+    },
+    "interpretation": "Conventional-leg residuals and similar-maturity pseudo-spreads centred on ~0 (CI spans 0) show the greenium is not a mechanical curve/maturity artefact; green-leg residuals sit below the conventional curve."
+  },
+  "liquidity_only": {
+    "available": true,
+    "spec": "(green_yield - conv_yield) ~ 1 + (log_amt_green - log_amt_conv)",
+    "intercept_pct": -0.01033186136380085,
+    "slope_on_logamt_gap": 0.016343601595035784,
+    "greenium_at_equal_liquidity_bp": 1.033186136380085,
+    "ci_lo_bp": -1966989.7157378332,
+    "ci_hi_bp": 1966991.7821101062,
+    "intercept_p": 0.999999203775765,
+    "survives_liquidity": false
+  },
+  "sign_stability": {
+    "n_pairs": 9,
+    "n_positive": 9,
+    "share_positive": 1.0,
+    "sign_test_p": 0.00390625,
+    "by_pair_mean_bp": {
+      "green_2025_5y": 5.3827584922899065,
+      "green_2027_5y": 4.278052410231741,
+      "green_2029_7y": 3.513681069774166,
+      "green_2030_10y": 3.069064030183743,
+      "green_2031_10y": 2.7718396863987262,
+      "green_2033_10y": 2.407414716207531,
+      "green_2041_15y": 1.3950655436716417,
+      "green_2050_30y": 1.6008801754797592,
+      "green_2053_30y": 1.4613754325745407
+    }
+  }
+}

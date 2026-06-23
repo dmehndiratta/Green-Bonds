@@ -1,0 +1,10 @@
+pair_id,tenor_label,green_isin,conv_isin,coupon,maturity,first_issue,initial_green_amount_eur_bn,isin_verified,source_url
+green_2025_5y,5Y Green Bobl,DE0001030773,DE0001141810,0.000,2025-10-10,2021-05-18,5.5,false,https://www.deutsche-finanzagentur.de/en/federal-securities/types-of-federal-securities/green-federal-securities/issuance
+green_2030_10y,10Y Green Bund,DE0001030757,DE0001102507,0.000,2030-08-15,2020-09-02,6.5,true,https://www.deutsche-finanzagentur.de/en/federal-securities/types-of-federal-securities/green-federal-securities/issuance
+green_2031_10y,10Y Green Bund,DE0001030781,DE0001102556,0.000,2031-08-15,2021-09-08,6.0,false,https://www.deutsche-finanzagentur.de/en/federal-securities/types-of-federal-securities/green-federal-securities/issuance
+green_2027_5y,5Y Green Bobl,DE0001030799,DE0001141828,1.300,2027-10-08,2022-09-06,4.0,false,https://www.deutsche-finanzagentur.de/en/federal-securities/types-of-federal-securities/green-federal-securities/issuance
+green_2033_10y,10Y Green Bund,DE0001030807,DE0001102614,2.300,2033-02-15,2023-01-17,5.0,false,https://www.deutsche-finanzagentur.de/en/federal-securities/types-of-federal-securities/green-federal-securities/issuance
+green_2029_7y,7Y Green Bund,DE0001030815,DE0001102622,2.200,2029-05-15,2023-09-05,4.0,false,https://www.deutsche-finanzagentur.de/en/federal-securities/types-of-federal-securities/green-federal-securities/issuance
+green_2050_30y,30Y Green Bund,DE0001030765,DE0001102481,0.000,2050-08-15,2020-09-02,6.0,false,https://www.deutsche-finanzagentur.de/en/federal-securities/types-of-federal-securities/green-federal-securities/issuance
+green_2053_30y,30Y Green Bund,DE0001030823,DE0001102606,1.800,2053-08-15,2023-05-09,3.5,false,https://www.deutsche-finanzagentur.de/en/federal-securities/types-of-federal-securities/green-federal-securities/issuance
+green_2041_15y,15Y Green Bund,DE0001030831,DE0001102630,2.500,2041-05-15,2026-03-03,4.0,false,https://www.deutsche-finanzagentur.de/en/federal-securities/types-of-federal-securities/green-federal-securities/issuance

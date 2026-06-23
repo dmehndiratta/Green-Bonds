@@ -1,0 +1,71 @@
+# config.yaml — single source of truth for the greenium analysis.
+# Every number in report.html / dashboard.html must trace back to a value in
+# site/data/*.json produced under these settings.
+
+seed: 20260615
+slug: green-bond-greenium
+
+# Sample window. German green twins start 2020-09-02 (first 10y/30y green Bunds).
+sample:
+  start: "2020-09-02"
+  end:   "2026-06-15"
+
+# Headline aggregation. Greenium moves daily but is a few bp — within bid-ask
+# noise on some days — so the HEADLINE is computed on weekly means; daily and
+# monthly are reported as robustness (see §4 of the plan).
+aggregation:
+  headline_freq: "W"          # W = weekly (Friday) means for the headline level/CI
+  robustness_freqs: ["D", "W", "M"]
+
+# Stress / illiquidity windows. Results are reported with AND without these.
+stress_windows:
+  - {name: "covid_2020",     start: "2020-09-02", end: "2020-12-31"}
+  - {name: "rate_shock_2022", start: "2022-01-01", end: "2022-12-31"}
+
+# Block bootstrap for CIs on the greenium level and trend (serial-dependence
+# respecting). HAC/Newey-West is used for the regression SEs.
+bootstrap:
+  n_boot: 2000
+  block_len: 20               # ~ one trading month per block
+
+# Nelson-Siegel-Svensson curve fit (French leg + cross-check).
+nss:
+  tau1_init: 1.5
+  tau2_init: 8.0
+  maturity_grid: [1, 2, 3, 4, 5, 7, 10, 15, 20, 30]
+  ns_robustness: true         # also fit the simpler 4-param Nelson-Siegel
+
+# Liquidity controls in the FE panel (the central confound).
+panel:
+  liquidity_controls: ["log_amount_out", "age_years", "on_the_run"]
+  cluster: "pair"             # cluster SEs by twin pair
+
+# ---------------------------------------------------------------------------
+# Germany — the identification spine (identical twins).
+# Per-ISIN daily yields from Deutsche Bundesbank; twin pairs in the manual CSV.
+# Bundesbank publishes daily prices & yields of listed Federal securities by ISIN
+# (SDMX/CSV). The exact per-ISIN series keys can change — confirm at fetch time
+# (plan §11.3); the fetcher logs the keys it used.
+# ---------------------------------------------------------------------------
+germany:
+  pairs_csv: "data/manual/twin_pairs.csv"
+  bundesbank_base: "https://api.statistiken.bundesbank.de/rest/data"
+  # Yield-curve quote basis: Bundesbank quotes annual-yield (ISMA/actual-actual);
+  # green and conventional legs share it -> safe to difference directly.
+  quote_basis: "annual_actual_actual"
+
+# ---------------------------------------------------------------------------
+# France — corroboration via a fitted conventional OAT curve (no identical twin).
+# ---------------------------------------------------------------------------
+france:
+  green_oats_csv: "data/manual/green_oats.csv"
+  aft_base: "https://www.aft.gouv.fr"
+  # Conventional OAT yields used to FIT the NSS curve each day.
+  conv_oat_source: "ecb"      # ECB SDW euro-area FR govt yields (keyless)
+
+# ---------------------------------------------------------------------------
+# ECB Statistical Data Warehouse — euro-area reference curves (keyless, SDMX).
+# ---------------------------------------------------------------------------
+ecb:
+  sdw_base: "https://data-api.ecb.europa.eu/service/data"
+  curve: "AAA"                # euro-area AAA-rated central-government curve (YC)

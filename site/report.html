@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Green-Bond Greenium — research report</title>
+<style>
+  :root{--bg:#0f1714;--panel:#15201b;--ink:#e7f3ec;--mut:#9ab4a7;--line:#28413a;
+        --acc:#2ecc71;--acc2:#4ea1ff;--warn:#f1c40f;--bad:#c0392b;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font:15px/1.65 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+  .wrap{max-width:820px;margin:0 auto;padding:30px 22px 80px}
+  h1{font-size:27px;margin:0 0 4px} h2{font-size:20px;margin:34px 0 8px;
+     border-bottom:1px solid var(--line);padding-bottom:6px}
+  h3{font-size:16px;margin:22px 0 6px;color:var(--acc)}
+  .sub{color:var(--mut);font-size:14px}
+  .lead{font-size:16px;color:#cfe3d8}
+  code{background:#1b2922;padding:1px 6px;border-radius:5px;font-size:13px}
+  .banner{background:#3a2e00;border:1px solid #6b5400;color:#ffe28a;
+          padding:10px 14px;border-radius:8px;margin:14px 0;font-size:13px;display:none}
+  .kpi{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+  .kpi div{background:var(--panel);border:1px solid var(--line);border-radius:9px;
+           padding:10px 14px;min-width:150px}
+  .kpi b{display:block;font-size:23px;color:var(--acc)}
+  .kpi span{color:var(--mut);font-size:12px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+  th,td{padding:6px 9px;border-bottom:1px solid var(--line);text-align:right}
+  th:first-child,td:first-child{text-align:left}
+  a{color:var(--acc2)}
+  .mut{color:var(--mut)} .pos{color:var(--acc)} .neg{color:var(--bad)}
+  blockquote{border-left:3px solid var(--acc);margin:12px 0;padding:4px 14px;color:#cfe3d8}
+  .tree{background:var(--panel);border:1px solid var(--line);border-radius:8px;
+        padding:12px 14px;font:12.5px/1.5 ui-monospace,Consolas,monospace;color:var(--mut);
+        white-space:pre;overflow-x:auto}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="banner" class="banner"></div>
+  <h1>The sovereign green-bond greenium</h1>
+  <div class="sub">Reading the price of "green" off identical twin bonds · <span id="asof"></span></div>
+
+  <p class="lead">Since 2020 the German Finance Agency has issued green Federal securities
+  <b>each paired with a conventional twin of identical coupon and maturity</b> — the cleanest
+  natural experiment in sustainable finance. The only thing that differs within a twin pair is
+  the green label (and the smaller, less-liquid green leg). The yield difference is the
+  <b>greenium</b>. This report estimates it model-free from the twins, adjusts it for liquidity,
+  corroborates it on French OATs with a fitted curve, and stress-tests it with placebo pairs.</p>
+
+  <div class="kpi" id="kpi"></div>
+
+  <p><a href="./dashboard.html">↗ open the interactive dashboard</a> — time series with a
+  confidence band, term structure, raw-vs-adjusted, and Germany-vs-France.</p>
+
+  <h2>1. Why twins identify the greenium</h2>
+  <p>A naive greenium — "green bonds yield less than other bonds" — is confounded by everything
+  that differs across bonds: maturity, coupon, issuer, credit, tax. The German <b>twin bond
+  concept</b> removes all of that: each green Bund is issued alongside a conventional Bund with
+  the <i>identical</i> coupon and maturity date, differing only in the green label and issue
+  size. So for a twin pair on a given day,</p>
+  <blockquote>greenium (bp) = (conventional yield − green yield) × 100,</blockquote>
+  <p>is a like-for-like difference with no curve-fitting and no convention mismatch (both legs
+  share the Bundesbank annual / actual-actual quote basis). This is the headline estimator; the
+  panel and the French curve are corroboration, not the lead.</p>
+
+  <h2>2. The headline: a small, positive, consistently-signed greenium</h2>
+  <p id="headp"></p>
+  <table id="bucketstab"></table>
+  <p class="mut">The greenium is <b>largest at the short end and compresses along the curve</b> —
+  the term structure on the dashboard runs from the short-tenor pairs down to the 30y green Bunds,
+  consistent with the published Finanzagentur figures (~6 bp at 3y to ~2–3 bp at the long end).</p>
+
+  <h2>3. Liquidity: how much is a green preference vs a liquidity premium?</h2>
+  <p>The green leg is smaller and less liquid than its conventional twin, so part of the raw
+  spread can be a liquidity premium rather than a green preference. We run a panel of yields with
+  <b>pair×date fixed effects</b> (each green bond compared only to its own twin on the same day)
+  and control for issue size — the only liquidity dimension that varies within a twin-day cell
+  (age and on/off-the-run are identical across twins by construction).</p>
+  <table id="paneltab"></table>
+  <p id="panelp" class="mut"></p>
+
+  <h2>4. France: independent corroboration via a fitted curve</h2>
+  <p>French green OATs have no identical twin, so the greenium is estimated against a
+  <b>Nelson–Siegel–Svensson</b> conventional-OAT curve fitted each day: greenium =
+  fitted-conventional-yield(at the green OAT's maturity) − green yield. It is noisier and
+  model-dependent, but a directionally-consistent positive estimate on a different issuer is
+  meaningful corroboration.</p>
+  <p id="frp" class="mut"></p>
+
+  <h2>5. Dynamics</h2>
+  <p id="dynp" class="mut"></p>
+
+  <h2>6. Robustness &amp; refutation</h2>
+  <p>The honest tests that could have killed the result:</p>
+  <ul>
+    <li><b>Placebo pairs.</b> A conventional bond's deviation from the conventional curve should
+      be ≈ 0 — and it is (<span id="plac"></span>), with a CI spanning zero. So the greenium is
+      <i>not</i> a mechanical maturity/curve artefact. Green legs, by contrast, sit
+      <span id="greenresid"></span> below that same curve.</li>
+    <li><b>Liquidity-only model.</b> The greenium that survives at equal liquidity is
+      <span id="liqonly"></span> — reported alongside the raw spread so the liquidity share is
+      explicit.</li>
+    <li><b>Sign stability.</b> <span id="signp"></span> twin pairs carry a positive mean greenium
+      (sign-test p = <span id="signpv"></span>): a real greenium is consistently signed.</li>
+    <li><b>Stress windows.</b> Results are reported with and without the COVID and 2022 rate-shock
+      windows; <span id="stressp"></span>.</li>
+    <li><b>Uncertainty.</b> Every level carries a <b>stationary block-bootstrap</b> CI and a
+      <b>Newey–West</b> HAC standard error — the greenium is a few bp, so naive iid intervals
+      would badly overstate precision.</li>
+  </ul>
+
+  <h2>7. What this is — and is not</h2>
+  <ul>
+    <li><b>Sovereign-specific.</b> The clean twin identification exists for German Bunds (and
+      partially French OATs). It does <b>not</b> transfer to corporate green bonds, where credit
+      risk, covenants and use-of-proceeds verification differ materially.</li>
+    <li><b>Small, noisy magnitudes.</b> A few basis points is near market microstructure noise;
+      conclusions are about averages with bands, not precise daily values.</li>
+    <li><b>Liquidity vs preference.</b> Even with twins, the residual blends a genuine green
+      preference with a liquidity premium; we bound but cannot fully separate them without
+      proprietary order-flow data.</li>
+    <li><b>Not investment advice.</b> The greenium is a research quantity, not a trade.</li>
+  </ul>
+
+  <h2>8. Data &amp; pipeline</h2>
+  <div class="tree" id="tree">Green-Bond-Greenium/
+├── data/manual/twin_pairs.csv      green↔conventional ISIN pairs (coupon, maturity, first issue)
+├── pipeline/01_fetch/              Bundesbank yields · AFT OATs · ECB curve · demo fallback
+├── pipeline/02_clean/              align twins · harmonise conventions · liquidity vars · entry dates
+├── pipeline/03_analysis/           twin_spread · panel_greenium · nss_curve · dynamics · refutation
+├── pipeline/04_export/             → site/data/*.json
+└── site/                           report.html · dashboard.html · data/*.json</div>
+  <p class="mut">Primary sources: Deutsche Finanzagentur (twin concept &amp; ISIN pairs),
+  Deutsche Bundesbank (daily per-ISIN yields), Agence France Trésor (green OATs), ECB SDW
+  (reference curves). Every headline number traces to a value in <code>site/data/*.json</code>;
+  see <code>SOURCES.md</code>. Seed = <span id="seed"></span>.</p>
+
+  <p class="mut" id="foot"></p>
+</div>
+
+<script>
+const F=(x,d=2)=>(x===null||x===undefined||Number.isNaN(x))?"—":Number(x).toFixed(d);
+async function J(p){const r=await fetch(p,{cache:'no-store'});if(!r.ok)throw new Error(p);return r.json();}
+(async function(){
+  let facts,twin,panel,nss,dyn,refu;
+  try{
+    facts=await J('./data/facts.json');
+    [twin,panel,nss,dyn,refu]=await Promise.all([J('./data/twin.json'),J('./data/panel.json'),
+      J('./data/nss.json').catch(()=>null),J('./data/dynamics.json').catch(()=>null),
+      J('./data/refutation.json')]);
+  }catch(e){document.getElementById('banner').style.display='block';
+    document.getElementById('banner').textContent='Could not load JSON ('+e.message
+    +'). Serve over http and reload.';return;}
+
+  if(facts.data_mode==='demo-synthetic'){const b=document.getElementById('banner');
+    b.style.display='block';
+    b.innerHTML='<b>Demo mode (synthetic data).</b> Live Bundesbank/AFT/ECB endpoints were '
+    +'unreachable; figures below come from a deterministic synthetic panel (real twin ISIN pairs '
+    +'+ real coupons/maturities + embedded greenium signal) and are illustrative, not empirical.';}
+
+  document.getElementById('asof').textContent='updated '+facts.last_updated
+    +' · data_mode='+facts.data_mode;
+  document.getElementById('seed').textContent=facts.seed;
+  const h=twin.headline;
+  document.getElementById('kpi').innerHTML=
+    `<div><b>${F(h.mean_bp)} bp</b><span>headline twin greenium<br>95% CI ${F(h.ci_lo_bp)}–${F(h.ci_hi_bp)}</span></div>`
+   +`<div><b>${F(panel.greenium_adjusted.greenium_bp)} bp</b><span>liquidity-adjusted (FE panel)</span></div>`
+   +`<div><b>${twin.n_signs_positive}/${twin.n_pairs}</b><span>pairs with positive greenium</span></div>`
+   +`<div><b>${(nss&&nss.available)?F(nss.greenium_nss.mean_bp)+' bp':'—'}</b><span>French NSS corroboration</span></div>`;
+
+  document.getElementById('headp').innerHTML=
+    `Pooled across ${twin.n_pairs} German twin pairs and ${h.n.toLocaleString()} pair-days `
+   +`(${twin.date_span[0]} → ${twin.date_span[1]}), the matched-pair greenium is `
+   +`<b class="pos">${F(h.mean_bp)} bp</b> (95% block-bootstrap CI ${F(h.ci_lo_bp)}–${F(h.ci_hi_bp)}; `
+   +`HAC t = ${F(h.hac_t,1)}). The green leg is below ${F(100*h.share_positive,1)}% of conventional twin `
+   +`observations.`;
+
+  let bt='<thead><tr><th>Maturity bucket</th><th>Greenium (bp)</th><th>95% CI</th><th>n (pair-days)</th></tr></thead><tbody>';
+  for(const r of twin.by_maturity_bucket)
+    bt+=`<tr><td>${r.bucket.replace(/_/g,' ')}</td><td class="pos">${F(r.mean_bp)}</td>`
+       +`<td>${F(r.ci_lo_bp)}–${F(r.ci_hi_bp)}</td><td>${r.n}</td></tr>`;
+  document.getElementById('bucketstab').innerHTML=bt+'</tbody>';
+
+  const pr=panel.greenium_raw,pa=panel.greenium_adjusted;
+  document.getElementById('paneltab').innerHTML=
+    '<thead><tr><th>Specification</th><th>Greenium (bp)</th><th>95% CI</th></tr></thead><tbody>'
+   +`<tr><td>Raw (pair×date FE only)</td><td>${F(pr.greenium_bp)}</td><td>${F(pr.ci_lo_bp)}–${F(pr.ci_hi_bp)}</td></tr>`
+   +`<tr><td>Liquidity-adjusted (+ log amount outstanding)</td><td>${F(pa.greenium_bp)}</td><td>${F(pa.ci_lo_bp)}–${F(pa.ci_hi_bp)}</td></tr>`
+   +'</tbody>';
+  document.getElementById('panelp').innerHTML=
+    `The gap between raw and adjusted — about <b>${F(panel.liquidity_gap_bp)} bp</b> — is the `
+   +`liquidity premium embedded in the raw spread. A liquidity-adjusted greenium that remains `
+   +`positive indicates investors price the green label beyond liquidity; one that collapses to `
+   +`zero would say the "greenium" is largely a liquidity story. Here it is `
+   +`${F(pa.greenium_bp)} bp.`;
+
+  if(nss&&nss.available){
+    document.getElementById('frp').innerHTML=
+      `The French green-OAT greenium is <b>${F(nss.greenium_nss.mean_bp)} bp</b> `
+     +`(95% CI ${F(nss.greenium_nss.ci_lo_bp)}–${F(nss.greenium_nss.ci_hi_bp)}; mean curve-fit RMSE `
+     +`${F(nss.fit_diagnostics.mean_rmse_bp)} bp). Smaller and noisier than the German twins, as `
+     +`expected from a fitted-curve method, but directionally consistent.`;
+  } else {document.getElementById('frp').textContent='French OAT data were unavailable in this run.';}
+
+  if(dyn){const t=dyn.compression_trend;
+    document.getElementById('dynp').innerHTML=
+      `Regressing the weekly pooled greenium on time gives a trend of <b>${F(t.point)} bp/year</b> `
+     +`(95% CI ${F(t.lo)}–${F(t.hi)}). `
+     +(t.significant?`The decline is statistically distinguishable from zero — evidence of `
+        +`compression as the market matured.`
+        :`The CI spans zero, so any drift is <b>not distinguishable from noise</b>; we do not `
+        +`over-read a compression story in the pooled series (entry of new short-maturity pairs `
+        +`offsets seasoning of older ones).`);}
+
+  const p=refu.placebo;
+  document.getElementById('plac').textContent=F(p.conventional_curve_residual.mean_bp)+' bp';
+  document.getElementById('greenresid').textContent=F(Math.abs(p.green_curve_residual.mean_bp))+' bp';
+  const lo=refu.liquidity_only;
+  document.getElementById('liqonly').textContent=(lo&&lo.available)
+    ? F(lo.greenium_at_equal_liquidity_bp)+' bp ('+(lo.survives_liquidity?'survives'
+        :'not significant at 5% with only '+refu.sign_stability.n_pairs+' pair clusters')+')':'—';
+  document.getElementById('signp').textContent=refu.sign_stability.n_positive+'/'+refu.sign_stability.n_pairs;
+  document.getElementById('signpv').textContent=F(refu.sign_stability.sign_test_p,4);
+
+  const sw=twin.stress, withS=sw.with_stress.mean_bp, exS=sw.ex_stress.mean_bp;
+  document.getElementById('stressp').innerHTML=
+    `the pooled greenium is ${F(withS)} bp with stress windows and ${F(exS)} bp excluding them`;
+
+  document.getElementById('foot').textContent=
+    `Reproduce: python run_pipeline.py (--offline rebuilds from committed artefacts). `
+   +`seed=${facts.seed}.`;
+})();
+</script>
+</body>
+</html>

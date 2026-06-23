@@ -1,0 +1,19 @@
+# raw + interim snapshots are reproducible; do not commit
+data/raw/
+data/interim/
+*.parquet
+
+# python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+
+# env / secrets
+.env
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

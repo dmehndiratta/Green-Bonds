@@ -1,0 +1,18 @@
+# Pinned for Python 3.11 (verified on 3.11; CI uses actions/setup-python@v5 3.11).
+pandas==2.2.3
+numpy==1.26.4
+scipy==1.13.1
+statsmodels==0.14.6
+matplotlib==3.9.4
+pyarrow==17.0.0
+pyyaml==6.0.2
+requests==2.32.3
+tqdm==4.66.5
+
+# Notes on dependencies the plan listed but that this build deliberately avoids,
+# for portability and a lighter, fully-reproducible environment:
+#   * linearmodels — the fixed-effects panel is implemented directly via a
+#     within (pair x date) transform + OLS with cluster-robust / HAC SEs in
+#     pipeline/03_analysis/panel_greenium.py, so no extra dependency is needed.
+#   * arch — the stationary block bootstrap is implemented in pipeline/stats.py.
+#   * pandasdmx — the Bundesbank/ECB fetchers use plain CSV/SDMX-CSV over requests.
