@@ -1,19 +1,17 @@
 """Deterministic SYNTHETIC data (used only when live endpoints are unreachable).
 
 This is NOT real market data. It exists so the full method — twin matched-pair
-spreads, the FE liquidity-adjusted panel, the NSS French curve, dynamics, the
-placebo/refutation suite, the dashboard band — runs and is testable in
-environments where Bundesbank / AFT / ECB endpoints are blocked (Akamai bot
-challenges; see the project memory). It uses the *real* twin ISIN pairs, *real*
-coupons/maturities/first-issue dates from data/manual/, and a realistic euro-area
-rate path (negative-yield 2020-21 -> 2022 rate shock -> 2023-26 plateau), then
-embeds a known greenium signal (larger at the short end, compressing over time)
-so the estimators have something genuine to recover.
+spreads, the FE liquidity-adjusted panel, dynamics, the placebo/refutation suite,
+the dashboard band — runs and is testable when the live Bundesbank workbook archive
+is unreachable. It uses the *real* twin ISIN pairs and *real* coupons/maturities/
+first-issue dates from data/manual/twin_pairs.csv, and a realistic euro-area rate
+path (negative-yield 2020-21 -> 2022 rate shock -> 2023-26 plateau), then embeds a
+known greenium signal (larger at the short end, compressing over time) so the
+estimators have something genuine to recover.
 
 Every artefact it feeds is stamped data_mode="demo-synthetic"; the dashboard and
-report show a prominent banner. Run the live fetchers wherever the endpoints are
-reachable (GitHub Actions CI, the user's own network) to replace this with genuine
-data — no downstream code changes.
+report show a prominent banner. The default path is live Bundesbank data (see
+fetch_bundesbank.py); this fallback only triggers if that archive cannot be reached.
 """
 from __future__ import annotations
 
@@ -82,8 +80,7 @@ def build(seed: int, cfg: dict):
     level = _interp(LEVEL_ANCHORS, days) + _ar1(n, 0.96, 0.015, rng)  # common factor
     slope = _interp(SLOPE_ANCHORS, days)
 
-    pairs = pd.read_csv(MANUAL / cfg["germany"]["pairs_csv"].split("/")[-1]
-                        if False else MANUAL / "twin_pairs.csv")
+    pairs = pd.read_csv(MANUAL / "twin_pairs.csv")
 
     yld_rows, amt_rows = [], []
     for _, p in pairs.iterrows():
@@ -124,58 +121,13 @@ def build(seed: int, cfg: dict):
 
     de_yields = pd.concat(yld_rows, ignore_index=True)
     de_amounts = pd.concat(amt_rows, ignore_index=True)
-
-    # ---- France: green OAT yields + a conventional OAT curve (points to fit) --
-    oats = pd.read_csv(MANUAL / "green_oats.csv")
-    fr_green_rows = []
-    conv_curve_rows = []
-    fr_grid = np.array([1, 2, 3, 5, 7, 10, 15, 20, 30], float)
-    # French OAT level sits a touch above Bund (~+0.4% spread), own greenium ~3-4 bp.
-    fr_spread = 0.40
-    for _, o in oats.iterrows():
-        first = pd.Timestamp(o["first_issue"])
-        mat = pd.Timestamp(o["maturity"])
-        alive = (days >= first) & (days <= min(mat, end))
-        if alive.sum() < 30:
-            continue
-        d_alive = days[alive]
-        m_years = (mat - d_alive).days.to_numpy(float) / 365.25
-        lv = level[alive] + fr_spread
-        sl = slope[alive]
-        fr = frac[alive]
-        conv_fitted = base_curve(lv, sl, m_years)
-        fr_g_bp = 3.5 * (1.0 - 0.35 * fr)              # ~3.5 bp compressing
-        green_y = conv_fitted - fr_g_bp / 100.0 + _ar1(int(alive.sum()), 0.5, 0.006, rng)
-        fr_green_rows.append(pd.DataFrame({"date": d_alive, "isin": o["isin"],
-                                           "oat_id": o["oat_id"], "yield_pct": green_y,
-                                           "maturity": o["maturity"]}))
-    # conventional OAT curve: noisy points on the grid each (weekly) day to fit NSS
-    week = days[::5]
-    for d in week:
-        lv = float(_interp(LEVEL_ANCHORS, pd.DatetimeIndex([d]))[0]) + fr_spread
-        sl = float(_interp(SLOPE_ANCHORS, pd.DatetimeIndex([d]))[0])
-        yv = base_curve(lv, sl, fr_grid) + rng.standard_normal(len(fr_grid)) * 0.02
-        conv_curve_rows.append(pd.DataFrame({"date": d, "maturity_years": fr_grid,
-                                             "yield_pct": yv}))
-    fr_green = pd.concat(fr_green_rows, ignore_index=True)
-    conv_curve = pd.concat(conv_curve_rows, ignore_index=True)
-
-    # ---- ECB euro-area AAA reference curve (weekly grid) ----------------------
-    ecb_rows = []
-    for d in week:
-        lv = float(_interp(LEVEL_ANCHORS, pd.DatetimeIndex([d]))[0])
-        sl = float(_interp(SLOPE_ANCHORS, pd.DatetimeIndex([d]))[0])
-        yv = base_curve(lv, sl, fr_grid)
-        ecb_rows.append(pd.DataFrame({"date": d, "maturity_years": fr_grid, "yield_pct": yv}))
-    ecb_curve = pd.concat(ecb_rows, ignore_index=True)
-
-    return de_yields, de_amounts, fr_green, conv_curve, ecb_curve
+    return de_yields, de_amounts
 
 
 def main(seed: int | None = None) -> None:
     cfg = load_config()
     seed = seed or cfg["seed"]
-    de_y, de_a, fr_g, conv_c, ecb_c = build(seed, cfg)
+    de_y, de_a = build(seed, cfg)
 
     snap = snapshot_dir("bundesbank")
     de_y.to_csv(snap / "bundesbank_yields.csv", index=False)
@@ -183,28 +135,16 @@ def main(seed: int | None = None) -> None:
     de_y.to_csv(RAW / "bundesbank" / "bundesbank_yields_latest.csv", index=False)
     de_a.to_csv(RAW / "bundesbank" / "bundesbank_amounts_latest.csv", index=False)
 
-    snap_fr = snapshot_dir("aft")
-    fr_g.to_csv(snap_fr / "oat_green_yields.csv", index=False)
-    conv_c.to_csv(snap_fr / "oat_conv_curve.csv", index=False)
-    fr_g.to_csv(RAW / "aft" / "oat_green_yields_latest.csv", index=False)
-    conv_c.to_csv(RAW / "aft" / "oat_conv_curve_latest.csv", index=False)
-
-    snap_ecb = snapshot_dir("ecb")
-    ecb_c.to_csv(snap_ecb / "ecb_aaa_curve.csv", index=False)
-    ecb_c.to_csv(RAW / "ecb" / "ecb_aaa_curve_latest.csv", index=False)
-
     write_json(PIPE.parent / "data" / "facts" / "data_mode.json",
                {"data_mode": "demo-synthetic",
-                "reason": "Live Bundesbank/AFT/ECB endpoints unreachable in this "
-                          "environment (bot challenges); synthetic panel with real "
-                          "twin ISIN pairs, real coupons/maturities and an embedded "
-                          "greenium signal so the method is runnable and testable.",
+                "reason": "Live Bundesbank archive unreachable in this run; synthetic "
+                          "panel with real twin ISIN pairs, real coupons/maturities and "
+                          "an embedded greenium signal so the method is runnable and "
+                          "testable.",
                 "seed": seed,
                 "n_days": int(de_y['date'].nunique()),
-                "n_de_pairs": int(de_y['pair_id'].nunique()),
-                "n_fr_oats": int(fr_g['oat_id'].nunique())})
+                "n_de_pairs": int(de_y['pair_id'].nunique())})
     print(f"  SYNTHETIC demo data: {de_y['pair_id'].nunique()} DE twin pairs, "
-          f"{fr_g['oat_id'].nunique()} FR green OATs, "
           f"{de_y['date'].nunique()} trading days; data_mode=demo-synthetic")
 
 

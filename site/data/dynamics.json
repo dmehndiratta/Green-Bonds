@@ -1,67 +1,67 @@
 {
-  "data_mode": "demo-synthetic",
+  "data_mode": "live",
   "seed": 20260615,
   "compression_trend": {
-    "point": 0.014223218779889238,
-    "lo": -0.048347484532572635,
-    "hi": 0.0760192096469594,
-    "n": 303,
+    "point": -0.6006107138907747,
+    "lo": -0.7922244271677126,
+    "hi": -0.4304265612821142,
+    "n": 302,
     "units": "bp per year",
-    "compressing": false,
-    "significant": false
+    "compressing": true,
+    "significant": true
   },
   "by_year": [
     {
       "year": 2020,
-      "greenium_bp": 2.4055556728217784,
-      "n": 174,
+      "greenium_bp": 1.8007206097672426,
+      "n": 120,
       "n_pairs": 2
     },
     {
       "year": 2021,
-      "greenium_bp": 3.006636263378143,
-      "n": 769,
+      "greenium_bp": 4.418785157297548,
+      "n": 754,
       "n_pairs": 4
     },
     {
       "year": 2022,
-      "greenium_bp": 3.1794530410217092,
-      "n": 1124,
+      "greenium_bp": 3.0308135005822785,
+      "n": 1110,
       "n_pairs": 5
     },
     {
       "year": 2023,
-      "greenium_bp": 3.1021452101959786,
-      "n": 1802,
-      "n_pairs": 8
+      "greenium_bp": 3.2319900822925227,
+      "n": 1557,
+      "n_pairs": 7
     },
     {
       "year": 2024,
-      "greenium_bp": 3.08085264893601,
-      "n": 2096,
+      "greenium_bp": 1.5116631481225695,
+      "n": 1918,
       "n_pairs": 8
     },
     {
       "year": 2025,
-      "greenium_bp": 3.0458970538180097,
-      "n": 2029,
-      "n_pairs": 8
+      "greenium_bp": 0.9983259344262293,
+      "n": 2135,
+      "n_pairs": 9
     },
     {
       "year": 2026,
-      "greenium_bp": 2.5912669298202964,
-      "n": 901,
-      "n_pairs": 8
+      "greenium_bp": 0.9616111419753085,
+      "n": 972,
+      "n_pairs": 9
     }
   ],
   "live_pairs_series": [
     {
       "date": "2020-09-01",
-      "n_live_pairs": 2
+      "n_live_pairs": 1
     },
     {
       "date": "2020-10-01",
-      "n_live_pairs": 2
+      "n_live_pairs": 1
     },
     {
       "date": "2020-11-01",
@@ -169,15 +169,15 @@
     },
     {
       "date": "2023-01-01",
-      "n_live_pairs": 6
+      "n_live_pairs": 5
     },
     {
       "date": "2023-02-01",
-      "n_live_pairs": 6
+      "n_live_pairs": 5
     },
     {
       "date": "2023-03-01",
-      "n_live_pairs": 6
+      "n_live_pairs": 5
     },
     {
       "date": "2023-04-01",
@@ -185,7 +185,7 @@
     },
     {
       "date": "2023-05-01",
-      "n_live_pairs": 7
+      "n_live_pairs": 6
     },
     {
       "date": "2023-06-01",
@@ -201,31 +201,31 @@
     },
     {
       "date": "2023-09-01",
-      "n_live_pairs": 8
+      "n_live_pairs": 7
     },
     {
       "date": "2023-10-01",
-      "n_live_pairs": 8
+      "n_live_pairs": 7
     },
     {
       "date": "2023-11-01",
-      "n_live_pairs": 8
+      "n_live_pairs": 7
     },
     {
       "date": "2023-12-01",
-      "n_live_pairs": 8
+      "n_live_pairs": 7
     },
     {
       "date": "2024-01-01",
-      "n_live_pairs": 8
+      "n_live_pairs": 7
     },
     {
       "date": "2024-02-01",
-      "n_live_pairs": 8
+      "n_live_pairs": 7
     },
     {
       "date": "2024-03-01",
-      "n_live_pairs": 8
+      "n_live_pairs": 7
     },
     {
       "date": "2024-04-01",
@@ -277,119 +277,125 @@
     },
     {
       "date": "2025-04-01",
-      "n_live_pairs": 8
+      "n_live_pairs": 9
     },
     {
       "date": "2025-05-01",
-      "n_live_pairs": 8
+      "n_live_pairs": 9
     },
     {
       "date": "2025-06-01",
-      "n_live_pairs": 8
+      "n_live_pairs": 9
     },
     {
       "date": "2025-07-01",
-      "n_live_pairs": 8
+      "n_live_pairs": 9
     },
     {
       "date": "2025-08-01",
-      "n_live_pairs": 8
+      "n_live_pairs": 9
     },
     {
       "date": "2025-09-01",
-      "n_live_pairs": 8
+      "n_live_pairs": 9
     },
     {
       "date": "2025-10-01",
-      "n_live_pairs": 8
+      "n_live_pairs": 9
     },
     {
       "date": "2025-11-01",
-      "n_live_pairs": 7
+      "n_live_pairs": 8
     },
     {
       "date": "2025-12-01",
-      "n_live_pairs": 7
+      "n_live_pairs": 8
     },
     {
       "date": "2026-01-01",
-      "n_live_pairs": 7
+      "n_live_pairs": 8
     },
     {
       "date": "2026-02-01",
-      "n_live_pairs": 7
+      "n_live_pairs": 8
     },
     {
       "date": "2026-03-01",
-      "n_live_pairs": 8
+      "n_live_pairs": 9
     },
     {
       "date": "2026-04-01",
-      "n_live_pairs": 8
+      "n_live_pairs": 9
     },
     {
       "date": "2026-05-01",
-      "n_live_pairs": 8
+      "n_live_pairs": 9
     },
     {
       "date": "2026-06-01",
-      "n_live_pairs": 8
+      "n_live_pairs": 9
     }
   ],
   "issuance_events": [
     {
       "pair_id": "green_2025_5y",
       "tenor_label": "5Y Green Bobl",
-      "greenium_first_120d_bp": 4.749548480511801,
-      "greenium_after_bp": 5.434680519645887
-    },
-    {
-      "pair_id": "green_2030_10y",
-      "tenor_label": "10Y Green Bund",
-      "greenium_first_120d_bp": 2.938287361088236,
-      "greenium_after_bp": 3.0770651344111055
-    },
-    {
-      "pair_id": "green_2031_10y",
-      "tenor_label": "10Y Green Bund",
-      "greenium_first_120d_bp": 2.746146533067875,
-      "greenium_after_bp": 2.7737716694063184
+      "greenium_first_120d_bp": 1.2617132520588388,
+      "greenium_after_bp": 5.532728553531796
     },
     {
       "pair_id": "green_2027_5y",
       "tenor_label": "5Y Green Bobl",
-      "greenium_first_120d_bp": 4.1298444614173055,
-      "greenium_after_bp": 4.292411086787259
+      "greenium_first_120d_bp": 1.8343522665621974,
+      "greenium_after_bp": 2.5280990119799553
+    },
+    {
+      "pair_id": "green_2029_5y",
+      "tenor_label": "5Y Green Bobl",
+      "greenium_first_120d_bp": 0.7268195531781557,
+      "greenium_after_bp": 0.6304845190156603
+    },
+    {
+      "pair_id": "green_2030_10y",
+      "tenor_label": "10Y Green Bund",
+      "greenium_first_120d_bp": 2.3956397411075345,
+      "greenium_after_bp": 2.2494609726250565
+    },
+    {
+      "pair_id": "green_2031_10y",
+      "tenor_label": "10Y Green Bund",
+      "greenium_first_120d_bp": 3.613066172575168,
+      "greenium_after_bp": 1.0399105669132647
     },
     {
       "pair_id": "green_2033_10y",
       "tenor_label": "10Y Green Bund",
-      "greenium_first_120d_bp": 2.4650409445856623,
-      "greenium_after_bp": 2.4011712767693028
+      "greenium_first_120d_bp": 1.0552037949954796,
+      "greenium_after_bp": 0.6395545479843712
     },
     {
-      "pair_id": "green_2029_7y",
-      "tenor_label": "7Y Green Bund",
-      "greenium_first_120d_bp": 3.4687387456558336,
-      "greenium_after_bp": 3.519809568517575
-    },
-    {
-      "pair_id": "green_2050_30y",
-      "tenor_label": "30Y Green Bund",
-      "greenium_first_120d_bp": 1.872823984555321,
-      "greenium_after_bp": 1.5842422631101571
-    },
-    {
-      "pair_id": "green_2053_30y",
-      "tenor_label": "30Y Green Bund",
-      "greenium_first_120d_bp": 1.5730662827166708,
-      "greenium_after_bp": 1.4479354547566086
+      "pair_id": "green_2035_10y",
+      "tenor_label": "10Y Green Bund",
+      "greenium_first_120d_bp": 0.3138815662650613,
+      "greenium_after_bp": 0.8684558767772494
     },
     {
       "pair_id": "green_2041_15y",
       "tenor_label": "15Y Green Bund",
-      "greenium_first_120d_bp": 1.3950655436716417,
+      "greenium_first_120d_bp": 0.8005492753623222,
       "greenium_after_bp": null
+    },
+    {
+      "pair_id": "green_2050_29y",
+      "tenor_label": "29Y Green Bund",
+      "greenium_first_120d_bp": 3.713934186308489,
+      "greenium_after_bp": 1.754548109075751
+    },
+    {
+      "pair_id": "green_2053_30y",
+      "tenor_label": "30Y Green Bund",
+      "greenium_first_120d_bp": 1.1029379922814835,
+      "greenium_after_bp": 0.9239298250662521
     }
   ],
   "interpretation": "A negative slope with a CI excluding zero indicates compression; otherwise the apparent drift is not distinguishable from noise."

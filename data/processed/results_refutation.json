@@ -1,26 +1,26 @@
 {
-  "data_mode": "demo-synthetic",
+  "data_mode": "live",
   "seed": 20260615,
   "placebo": {
     "conventional_curve_residual": {
-      "mean_bp": -2.1812034266860813e-09,
-      "ci_lo_bp": -0.001792004702553269,
-      "ci_hi_bp": 0.0018770329876939,
-      "n": 8284,
+      "mean_bp": 1.3584849245025783e-07,
+      "ci_lo_bp": -0.006200857308989312,
+      "ci_hi_bp": 0.006186054084648893,
+      "n": 8027,
       "ci_spans_zero": true
     },
     "green_curve_residual": {
-      "mean_bp": -3.0402814117284,
-      "ci_lo_bp": -3.0725247058624485,
-      "ci_hi_bp": -3.008377823892151,
-      "n": 8284,
+      "mean_bp": -1.9958180180916438,
+      "ci_lo_bp": -2.1705861146015435,
+      "ci_hi_bp": -1.8231933622456844,
+      "n": 8016,
       "ci_spans_zero": false
     },
     "similar_maturity_conv_pseudo_spread": {
-      "mean_bp": -0.11111102741808074,
-      "ci_lo_bp": -0.8582141231420143,
-      "ci_hi_bp": 0.6676908339350385,
-      "n": 4652,
+      "mean_bp": -0.4766750823760659,
+      "ci_lo_bp": -2.3011749745599794,
+      "ci_hi_bp": 1.4658144894886413,
+      "n": 4546,
       "ci_spans_zero": true
     },
     "interpretation": "Conventional-leg residuals and similar-maturity pseudo-spreads centred on ~0 (CI spans 0) show the greenium is not a mechanical curve/maturity artefact; green-leg residuals sit below the conventional curve."
@@ -28,29 +28,30 @@
   "liquidity_only": {
     "available": true,
     "spec": "(green_yield - conv_yield) ~ 1 + (log_amt_green - log_amt_conv)",
-    "intercept_pct": -0.011755338893158138,
-    "slope_on_logamt_gap": 0.014726653247461814,
-    "greenium_at_equal_liquidity_bp": 1.1755338893158138,
-    "ci_lo_bp": 0.8160880994206717,
-    "ci_hi_bp": 1.534979679210956,
-    "intercept_p": 0.00020691787699478326,
-    "survives_liquidity": true
+    "intercept_pct": 0.0070440097015830525,
+    "slope_on_logamt_gap": 0.02049605873729794,
+    "greenium_at_equal_liquidity_bp": -0.7044009701583053,
+    "ci_lo_bp": -4.630147351049145,
+    "ci_hi_bp": 3.2213454107325354,
+    "intercept_p": 0.7331680333513786,
+    "survives_liquidity": false
   },
   "sign_stability": {
-    "n_pairs": 9,
-    "n_positive": 9,
+    "n_pairs": 10,
+    "n_positive": 10,
     "share_positive": 1.0,
-    "sign_test_p": 0.00390625,
+    "sign_test_p": 0.001953125,
     "by_pair_mean_bp": {
-      "green_2025_5y": 5.3827584922899065,
-      "green_2027_5y": 4.278052410231741,
-      "green_2029_7y": 3.513681069774166,
-      "green_2030_10y": 3.069064030183743,
-      "green_2031_10y": 2.7718396863987262,
-      "green_2033_10y": 2.407414716207531,
-      "green_2041_15y": 1.3950655436716417,
-      "green_2050_30y": 1.6008801754797592,
-      "green_2053_30y": 1.4613754325745407
+      "green_2025_5y": 5.248222718842987,
+      "green_2027_5y": 2.465230497642835,
+      "green_2029_5y": 0.6455709488939378,
+      "green_2030_10y": 2.2577825348912057,
+      "green_2031_10y": 1.2217212289924515,
+      "green_2033_10y": 0.6842022931876104,
+      "green_2035_10y": 0.71189238095238,
+      "green_2041_15y": 0.8005492753623222,
+      "green_2050_29y": 1.8843593456811938,
+      "green_2053_30y": 0.9441634609881864
     }
   }
 }

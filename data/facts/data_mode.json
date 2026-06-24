@@ -1,8 +1,9 @@
 {
-  "data_mode": "demo-synthetic",
-  "reason": "Live Bundesbank/AFT/ECB endpoints unreachable in this environment (bot challenges); synthetic panel with real twin ISIN pairs, real coupons/maturities and an embedded greenium signal so the method is runnable and testable.",
-  "seed": 20260615,
-  "n_days": 1509,
-  "n_de_pairs": 9,
-  "n_fr_oats": 4
+  "data_mode": "live",
+  "source": "Deutsche Bundesbank — prices and yields of listed Federal securities",
+  "source_url": "https://www.bundesbank.de/dynamic/action/en/service/federal-securities/prices-and-yields/810710/prices-and-yields-of-listed-federal-securities",
+  "months": [
+    "2020-09",
+    "2026-06"
+  ]
 }

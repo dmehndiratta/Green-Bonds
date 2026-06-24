@@ -1,59 +1,68 @@
 {
-  "data_mode": "demo-synthetic",
+  "data_mode": "live",
   "seed": 20260615,
   "spec": "yield ~ green + liquidity | pair×date FE; cluster-robust by pair",
   "controls_varying_within_cell": [
-    "log_amount_out"
-  ],
-  "controls_invariant_within_cell": [
-    "age_years",
+    "log_amount_out",
     "on_the_run"
   ],
+  "controls_invariant_within_cell": [
+    "age_years"
+  ],
   "controls_invariant_note": "Identical maturity/coupon -> age & on/off-the-run are equal across the two twin legs on a given day, so they cannot vary within the pair×date cell; issue size (log amount) is the operative control.",
-  "n_obs": 17790,
-  "n_clusters": 9,
+  "n_obs": 17132,
+  "n_clusters": 10,
   "greenium_raw": {
-    "greenium_bp": 3.0204344731450297,
-    "ci_lo_bp": 2.0969379407690325,
-    "ci_hi_bp": 3.9439310055210273,
-    "se_bp": 0.4711803581309159,
-    "p_value": 0.00020683851877478787
+    "greenium_bp": 2.090794284806128,
+    "ci_lo_bp": 1.0246970863580027,
+    "ci_hi_bp": 3.156891483254253,
+    "se_bp": 0.5439371369102607,
+    "p_value": 0.003943435837208575
   },
   "greenium_adjusted": {
-    "greenium_bp": 1.1755338893158134,
-    "ci_lo_bp": 0.8161048089326909,
-    "ci_hi_bp": 1.5349629696989358,
-    "se_bp": 0.18338555357848701,
-    "p_value": 0.0002068781908952655
+    "greenium_bp": -1.0026267573439596,
+    "ci_lo_bp": -5.391359055191416,
+    "ci_hi_bp": 3.3861055405034963,
+    "se_bp": 2.2391902766761587,
+    "p_value": 0.6649076485677887
   },
-  "liquidity_gap_bp": 1.8449005838292163,
+  "liquidity_gap_bp": 3.093421042150087,
   "coef_table": [
     {
       "term": "green dummy (raw, pair×date FE)",
-      "coef": -0.030204344731450297,
-      "se": 0.004711803581309159,
-      "t": -6.4103573525996005,
-      "p_value": 0.00020683851877478787,
-      "lo": -0.03943931005521027,
-      "hi": -0.020969379407690326
+      "coef": -0.02090794284806128,
+      "se": 0.005439371369102607,
+      "t": -3.843816027496334,
+      "p_value": 0.003943435837208575,
+      "lo": -0.03156891483254253,
+      "hi": -0.010246970863580028
     },
     {
       "term": "green dummy (liquidity-adjusted)",
-      "coef": -0.011755338893158133,
-      "se": 0.0018338555357848701,
-      "t": -6.410177172503927,
-      "p_value": 0.0002068781908952655,
-      "lo": -0.015349629696989357,
-      "hi": -0.00816104808932691
+      "coef": 0.010026267573439596,
+      "se": 0.022391902766761587,
+      "t": 0.4477630899828009,
+      "p_value": 0.6649076485677887,
+      "lo": -0.033861055405034965,
+      "hi": 0.053913590551914164
     },
     {
       "term": "control: log_amount_out",
-      "coef": 0.014726653247461807,
-      "se": 0.002297386304801514,
-      "t": 6.410177172503924,
-      "p_value": 0.0002068781908952655,
-      "lo": 0.010223858830418608,
-      "hi": 0.019229447664505007
+      "coef": 0.02313142590739247,
+      "se": 0.018558465802534476,
+      "t": 1.2464083051646155,
+      "p_value": 0.24407886463965678,
+      "lo": -0.013242498682429223,
+      "hi": 0.059505350497214164
+    },
+    {
+      "term": "control: on_the_run",
+      "coef": 0.007188651610635236,
+      "se": 0.007752354783482484,
+      "t": 0.9272862003106076,
+      "p_value": 0.37797462957717,
+      "lo": -0.008005684563932905,
+      "hi": 0.022382987785203375
     }
   ]
 }

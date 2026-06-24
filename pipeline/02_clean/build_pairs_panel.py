@@ -1,4 +1,4 @@
-"""Build the analysis panels from raw German twin yields + French green OATs.
+"""Build the analysis panels from the raw German twin yields.
 
 Outputs (committed, small parquet):
   data/processed/panel_germany.parquet  — long: date, pair_id, leg, isin,
@@ -6,15 +6,12 @@ Outputs (committed, small parquet):
       on_the_run, tenor_label, in_stress
   data/processed/twin_spread_daily.parquet — date, pair_id, greenium_bp,
       maturity_years, ... (conv_yield - green_yield, by pair & day)
-  data/processed/panel_france.parquet    — green-OAT yields by date/isin/maturity
-  data/processed/conv_curve_fr.parquet   — conventional OAT curve points to fit
   data/processed/panel_meta.json         — coverage + convention harmonisation log
 
 Guards (the gotchas in plan §3):
   * Yield-convention harmonisation: both legs of a German twin come from the same
     Bundesbank quote basis (annual / actual-actual), so they are differenced
-    directly; this is asserted and logged. French conventional yields are
-    harmonised to the same basis before NSS fitting.
+    directly; this is asserted and logged.
   * Pair entry dates: a bond never appears before its first_issue (no pre-twin
     comparison); enforced here and tested in tests/test_entry_dates.py.
 """
@@ -101,21 +98,6 @@ def main(offline: bool = False) -> None:
     wide = wide.sort_values(["pair_id", "date"]).reset_index(drop=True)
     wide.to_parquet(PROCESSED / "twin_spread_daily.parquet")
 
-    # --- France ---------------------------------------------------------------
-    fr_meta = {"available": False}
-    fg_path = RAW / "aft" / "oat_green_yields_latest.csv"
-    cc_path = RAW / "aft" / "oat_conv_curve_latest.csv"
-    if fg_path.exists() and cc_path.exists():
-        fr_green = pd.read_csv(fg_path, parse_dates=["date"])
-        fr_green["maturity"] = pd.to_datetime(fr_green["maturity"])
-        fr_green["maturity_years"] = (fr_green["maturity"] - fr_green["date"]).dt.days / 365.25
-        fr_green.to_parquet(PROCESSED / "panel_france.parquet")
-        conv = pd.read_csv(cc_path, parse_dates=["date"])
-        conv.to_parquet(PROCESSED / "conv_curve_fr.parquet")
-        fr_meta = {"available": True,
-                   "n_oats": int(fr_green["oat_id"].nunique()),
-                   "n_days": int(fr_green["date"].nunique())}
-
     # --- coverage + convention log --------------------------------------------
     cov = (germany.groupby(["pair_id", "leg"])
            .agg(n=("date", "size"),
@@ -134,11 +116,10 @@ def main(offline: bool = False) -> None:
         "date_span": [germany["date"].min().strftime("%Y-%m-%d"),
                       germany["date"].max().strftime("%Y-%m-%d")],
         "coverage": cov.to_dict(orient="records"),
-        "france": fr_meta,
     }
     write_json(PROCESSED / "panel_meta.json", meta)
     print(f"  panel_germany {germany.shape}; twin_spread_daily {wide.shape}; "
-          f"dropped {pre} pre-issue obs; france_available={fr_meta['available']}")
+          f"dropped {pre} pre-issue obs")
 
 
 if __name__ == "__main__":

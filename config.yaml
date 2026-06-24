@@ -49,23 +49,9 @@ panel:
 # ---------------------------------------------------------------------------
 germany:
   pairs_csv: "data/manual/twin_pairs.csv"
-  bundesbank_base: "https://api.statistiken.bundesbank.de/rest/data"
+  # Source: Bundesbank "prices and yields of listed Federal securities" monthly
+  # Excel workbooks (the per-ISIN SDMX API does not carry these). twin_pairs.csv is
+  # rebuilt from the workbook's own green/conventional labels at fetch time.
   # Yield-curve quote basis: Bundesbank quotes annual-yield (ISMA/actual-actual);
   # green and conventional legs share it -> safe to difference directly.
   quote_basis: "annual_actual_actual"
-
-# ---------------------------------------------------------------------------
-# France — corroboration via a fitted conventional OAT curve (no identical twin).
-# ---------------------------------------------------------------------------
-france:
-  green_oats_csv: "data/manual/green_oats.csv"
-  aft_base: "https://www.aft.gouv.fr"
-  # Conventional OAT yields used to FIT the NSS curve each day.
-  conv_oat_source: "ecb"      # ECB SDW euro-area FR govt yields (keyless)
-
-# ---------------------------------------------------------------------------
-# ECB Statistical Data Warehouse — euro-area reference curves (keyless, SDMX).
-# ---------------------------------------------------------------------------
-ecb:
-  sdw_base: "https://data-api.ecb.europa.eu/service/data"
-  curve: "AAA"                # euro-area AAA-rated central-government curve (YC)

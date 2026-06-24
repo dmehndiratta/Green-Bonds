@@ -46,12 +46,12 @@
   natural experiment in sustainable finance. The only thing that differs within a twin pair is
   the green label (and the smaller, less-liquid green leg). The yield difference is the
   <b>greenium</b>. This report estimates it model-free from the twins, adjusts it for liquidity,
-  corroborates it on French OATs with a fitted curve, and stress-tests it with placebo pairs.</p>
+  and stress-tests it with placebo pairs.</p>
 
   <div class="kpi" id="kpi"></div>
 
   <p><a href="./dashboard.html">↗ open the interactive dashboard</a> — time series with a
-  confidence band, term structure, raw-vs-adjusted, and Germany-vs-France.</p>
+  confidence band, term structure, and raw-vs-adjusted.</p>
 
   <h2>1. Why twins identify the greenium</h2>
   <p>A naive greenium — "green bonds yield less than other bonds" — is confounded by everything
@@ -62,14 +62,14 @@
   <blockquote>greenium (bp) = (conventional yield − green yield) × 100,</blockquote>
   <p>is a like-for-like difference with no curve-fitting and no convention mismatch (both legs
   share the Bundesbank annual / actual-actual quote basis). This is the headline estimator; the
-  panel and the French curve are corroboration, not the lead.</p>
+  liquidity-adjusted panel is corroboration, not the lead.</p>
 
   <h2>2. The headline: a small, positive, consistently-signed greenium</h2>
   <p id="headp"></p>
   <table id="bucketstab"></table>
   <p class="mut">The greenium is <b>largest at the short end and compresses along the curve</b> —
   the term structure on the dashboard runs from the short-tenor pairs down to the 30y green Bunds,
-  consistent with the published Finanzagentur figures (~6 bp at 3y to ~2–3 bp at the long end).</p>
+  consistent with published figures of a few basis points, larger at the short end.</p>
 
   <h2>3. Liquidity: how much is a green preference vs a liquidity premium?</h2>
   <p>The green leg is smaller and less liquid than its conventional twin, so part of the raw
@@ -80,18 +80,10 @@
   <table id="paneltab"></table>
   <p id="panelp" class="mut"></p>
 
-  <h2>4. France: independent corroboration via a fitted curve</h2>
-  <p>French green OATs have no identical twin, so the greenium is estimated against a
-  <b>Nelson–Siegel–Svensson</b> conventional-OAT curve fitted each day: greenium =
-  fitted-conventional-yield(at the green OAT's maturity) − green yield. It is noisier and
-  model-dependent, but a directionally-consistent positive estimate on a different issuer is
-  meaningful corroboration.</p>
-  <p id="frp" class="mut"></p>
-
-  <h2>5. Dynamics</h2>
+  <h2>4. Dynamics</h2>
   <p id="dynp" class="mut"></p>
 
-  <h2>6. Robustness &amp; refutation</h2>
+  <h2>5. Robustness &amp; refutation</h2>
   <p>The honest tests that could have killed the result:</p>
   <ul>
     <li><b>Placebo pairs.</b> A conventional bond's deviation from the conventional curve should
@@ -110,11 +102,11 @@
       would badly overstate precision.</li>
   </ul>
 
-  <h2>7. What this is — and is not</h2>
+  <h2>6. What this is — and is not</h2>
   <ul>
-    <li><b>Sovereign-specific.</b> The clean twin identification exists for German Bunds (and
-      partially French OATs). It does <b>not</b> transfer to corporate green bonds, where credit
-      risk, covenants and use-of-proceeds verification differ materially.</li>
+    <li><b>Sovereign-specific.</b> The clean twin identification exists for German Bunds. It does
+      <b>not</b> transfer to corporate green bonds, where credit risk, covenants and use-of-proceeds
+      verification differ materially.</li>
     <li><b>Small, noisy magnitudes.</b> A few basis points is near market microstructure noise;
       conclusions are about averages with bands, not precise daily values.</li>
     <li><b>Liquidity vs preference.</b> Even with twins, the residual blends a genuine green
@@ -123,18 +115,18 @@
     <li><b>Not investment advice.</b> The greenium is a research quantity, not a trade.</li>
   </ul>
 
-  <h2>8. Data &amp; pipeline</h2>
+  <h2>7. Data &amp; pipeline</h2>
   <div class="tree" id="tree">Green-Bond-Greenium/
-├── data/manual/twin_pairs.csv      green↔conventional ISIN pairs (coupon, maturity, first issue)
-├── pipeline/01_fetch/              Bundesbank yields · AFT OATs · ECB curve · demo fallback
+├── data/manual/twin_pairs.csv      green↔conventional ISIN pairs (rebuilt from Bundesbank labels)
+├── pipeline/01_fetch/              Bundesbank monthly workbooks · demo fallback
 ├── pipeline/02_clean/              align twins · harmonise conventions · liquidity vars · entry dates
-├── pipeline/03_analysis/           twin_spread · panel_greenium · nss_curve · dynamics · refutation
+├── pipeline/03_analysis/           twin_spread · panel_greenium · dynamics · refutation
 ├── pipeline/04_export/             → site/data/*.json
 └── site/                           report.html · dashboard.html · data/*.json</div>
-  <p class="mut">Primary sources: Deutsche Finanzagentur (twin concept &amp; ISIN pairs),
-  Deutsche Bundesbank (daily per-ISIN yields), Agence France Trésor (green OATs), ECB SDW
-  (reference curves). Every headline number traces to a value in <code>site/data/*.json</code>;
-  see <code>SOURCES.md</code>. Seed = <span id="seed"></span>.</p>
+  <p class="mut">Primary source: Deutsche Bundesbank, "prices and yields of listed Federal
+  securities" (daily per-ISIN yields and issue volumes; the green bonds are labelled, and the twin
+  set is rebuilt from those labels). Every headline number traces to a value in
+  <code>site/data/*.json</code>; see <code>SOURCES.md</code>. Seed = <span id="seed"></span>.</p>
 
   <p class="mut" id="foot"></p>
 </div>
@@ -143,11 +135,11 @@
 const F=(x,d=2)=>(x===null||x===undefined||Number.isNaN(x))?"—":Number(x).toFixed(d);
 async function J(p){const r=await fetch(p,{cache:'no-store'});if(!r.ok)throw new Error(p);return r.json();}
 (async function(){
-  let facts,twin,panel,nss,dyn,refu;
+  let facts,twin,panel,dyn,refu;
   try{
     facts=await J('./data/facts.json');
-    [twin,panel,nss,dyn,refu]=await Promise.all([J('./data/twin.json'),J('./data/panel.json'),
-      J('./data/nss.json').catch(()=>null),J('./data/dynamics.json').catch(()=>null),
+    [twin,panel,dyn,refu]=await Promise.all([J('./data/twin.json'),J('./data/panel.json'),
+      J('./data/dynamics.json').catch(()=>null),
       J('./data/refutation.json')]);
   }catch(e){document.getElementById('banner').style.display='block';
     document.getElementById('banner').textContent='Could not load JSON ('+e.message
@@ -155,7 +147,7 @@ async function J(p){const r=await fetch(p,{cache:'no-store'});if(!r.ok)throw new
 
   if(facts.data_mode==='demo-synthetic'){const b=document.getElementById('banner');
     b.style.display='block';
-    b.innerHTML='<b>Demo mode (synthetic data).</b> Live Bundesbank/AFT/ECB endpoints were '
+    b.innerHTML='<b>Demo mode (synthetic data).</b> The live Bundesbank workbook archive was '
     +'unreachable; figures below come from a deterministic synthetic panel (real twin ISIN pairs '
     +'+ real coupons/maturities + embedded greenium signal) and are illustrative, not empirical.';}
 
@@ -167,7 +159,7 @@ async function J(p){const r=await fetch(p,{cache:'no-store'});if(!r.ok)throw new
     `<div><b>${F(h.mean_bp)} bp</b><span>headline twin greenium<br>95% CI ${F(h.ci_lo_bp)}–${F(h.ci_hi_bp)}</span></div>`
    +`<div><b>${F(panel.greenium_adjusted.greenium_bp)} bp</b><span>liquidity-adjusted (FE panel)</span></div>`
    +`<div><b>${twin.n_signs_positive}/${twin.n_pairs}</b><span>pairs with positive greenium</span></div>`
-   +`<div><b>${(nss&&nss.available)?F(nss.greenium_nss.mean_bp)+' bp':'—'}</b><span>French NSS corroboration</span></div>`;
+   +`<div><b>${F(panel.liquidity_gap_bp)} bp</b><span>liquidity premium (raw − adjusted)</span></div>`;
 
   document.getElementById('headp').innerHTML=
     `Pooled across ${twin.n_pairs} German twin pairs and ${h.n.toLocaleString()} pair-days `
@@ -194,14 +186,6 @@ async function J(p){const r=await fetch(p,{cache:'no-store'});if(!r.ok)throw new
    +`positive indicates investors price the green label beyond liquidity; one that collapses to `
    +`zero would say the "greenium" is largely a liquidity story. Here it is `
    +`${F(pa.greenium_bp)} bp.`;
-
-  if(nss&&nss.available){
-    document.getElementById('frp').innerHTML=
-      `The French green-OAT greenium is <b>${F(nss.greenium_nss.mean_bp)} bp</b> `
-     +`(95% CI ${F(nss.greenium_nss.ci_lo_bp)}–${F(nss.greenium_nss.ci_hi_bp)}; mean curve-fit RMSE `
-     +`${F(nss.fit_diagnostics.mean_rmse_bp)} bp). Smaller and noisier than the German twins, as `
-     +`expected from a fitted-curve method, but directionally consistent.`;
-  } else {document.getElementById('frp').textContent='French OAT data were unavailable in this run.';}
 
   if(dyn){const t=dyn.compression_trend;
     document.getElementById('dynp').innerHTML=

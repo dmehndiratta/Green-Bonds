@@ -105,6 +105,43 @@ def fetch_text(session: requests.Session, url: str, dest: Path,
     return None
 
 
+def fetch_bytes(session: requests.Session, url: str, dest: Path,
+                offline: bool = False, force: bool = False,
+                retries: int = 4, backoff: float = 3.0, **kwargs) -> bytes | None:
+    """Binary sibling of fetch_text (for XLSX downloads).
+
+    Caches to `dest` with validate-then-promote. A cached file is reused unless
+    `force` is set (used to refresh the always-changing current month); the
+    historical monthly workbooks never change once closed, so caching them makes
+    re-runs and CI cheap. On failure the last-good cache is returned.
+    """
+    if dest.exists() and not force and (offline or os.environ.get("GREENIUM_USE_CACHE") == "1"):
+        return dest.read_bytes()
+    if offline:
+        return dest.read_bytes() if dest.exists() else None
+    last_exc = None
+    for attempt in range(retries):
+        try:
+            r = session.get(url, timeout=90, **kwargs)
+            r.raise_for_status()
+            content = r.content
+            if not content or len(content) < 64:
+                raise ValueError("empty/short response")
+            tmp = dest.with_suffix(dest.suffix + ".tmp")
+            tmp.write_bytes(content)
+            tmp.replace(dest)  # promote atomically only after validation
+            return content
+        except Exception as exc:  # noqa: BLE001 - last-good fallback is the point
+            last_exc = exc
+            if attempt < retries - 1:
+                time.sleep(backoff * (attempt + 1))
+    print(f"  [warn] fetch failed for {url}: {last_exc}")
+    if dest.exists():
+        print(f"  [warn] using last-good cache {dest}")
+        return dest.read_bytes()
+    return None
+
+
 # --- deterministic, browser-parseable JSON ---------------------------------
 def _reject_nonfinite(x):
     raise ValueError(f"non-finite value not allowed in JSON: {x}")

@@ -1,9 +1,9 @@
 """Green-Bond-Greenium pipeline orchestrator.
 
 Stages:
-  1  fetch     Bundesbank per-ISIN yields + AFT/ECB curves; demo-synthetic fallback
+  1  fetch     Bundesbank green/conventional twin yields; demo-synthetic fallback
   2  clean     align twins, harmonise conventions, liquidity vars, entry dates
-  3  analysis  twin spread, FE panel, NSS French curve, dynamics, refutation
+  3  analysis  twin spread, FE panel (liquidity-adjusted), dynamics, refutation
   4  export    assemble site/data/*.json
 
 Flags:
@@ -44,8 +44,6 @@ def stage_fetch(offline: bool, demo: bool):
         _run("01_fetch/make_demo_data.py")
         return
     _run("01_fetch/fetch_bundesbank.py", offline=offline)
-    _run("01_fetch/fetch_aft_oat.py", offline=offline)
-    _run("01_fetch/fetch_ecb_curve.py", offline=offline)
     # Fall back to synthetic data if the live German fetch produced nothing.
     latest = ROOT / "data" / "raw" / "bundesbank" / "bundesbank_yields_latest.csv"
     if not latest.exists():
@@ -60,7 +58,6 @@ def stage_clean(offline: bool):
 def stage_analysis(offline: bool):
     _run("03_analysis/twin_spread.py", offline=offline)
     _run("03_analysis/panel_greenium.py", offline=offline)
-    _run("03_analysis/nss_curve.py", offline=offline)
     _run("03_analysis/dynamics.py", offline=offline)
     _run("03_analysis/refutation.py", offline=offline)
 

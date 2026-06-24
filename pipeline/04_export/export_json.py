@@ -1,6 +1,6 @@
 """Assemble site/data/*.json — the only thing the dashboard/report read.
 
-Pulls the committed processed results (twin, panel, NSS, dynamics, refutation,
+Pulls the committed processed results (twin, panel, dynamics, refutation,
 panel meta, data mode) into a small set of browser-parseable JSON files. Numbers
 in report.html / dashboard.html must trace back to these.
 """
@@ -27,12 +27,11 @@ def main(offline: bool = False) -> None:
 
     twin = _maybe("results_twin.json")
     panel = _maybe("results_panel.json")
-    nss = _maybe("results_nss.json")
     dyn = _maybe("results_dynamics.json")
     refu = _maybe("results_refutation.json")
     pmeta = _maybe("panel_meta.json")
 
-    for obj, fn in [(twin, "twin.json"), (panel, "panel.json"), (nss, "nss.json"),
+    for obj, fn in [(twin, "twin.json"), (panel, "panel.json"),
                     (dyn, "dynamics.json"), (refu, "refutation.json")]:
         if obj is not None:
             write_json(SITE_DATA / fn, obj)
@@ -56,15 +55,13 @@ def main(offline: bool = False) -> None:
         "panel_raw_bp": (panel or {}).get("greenium_raw", {}).get("greenium_bp"),
         "panel_adjusted_bp": (panel or {}).get("greenium_adjusted", {}).get("greenium_bp"),
         "liquidity_gap_bp": (panel or {}).get("liquidity_gap_bp"),
-        "france_nss_bp": (nss or {}).get("greenium_nss", {}).get("mean_bp")
-                         if nss and nss.get("available") else None,
         "compression_bp_per_yr": (dyn or {}).get("compression_trend", {}).get("point"),
         "placebo_conv_residual_bp": (refu or {}).get("placebo", {})
                                     .get("conventional_curve_residual", {}).get("mean_bp"),
         "panel_meta": pmeta,
     }
     write_json(SITE_DATA / "facts.json", facts)
-    print(f"  exported site/data: facts, twin, panel, nss, dynamics, refutation "
+    print(f"  exported site/data: facts, twin, panel, dynamics, refutation "
           f"(data_mode={facts['data_mode']}, headline={facts['headline_greenium_bp']})")
 
 

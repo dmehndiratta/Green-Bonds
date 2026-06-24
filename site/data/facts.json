@@ -1,9 +1,9 @@
 {
   "title": "Green-Bond Greenium",
   "subtitle": "How much less does sustainability-labelled sovereign debt yield than its identical conventional twin?",
-  "last_updated": "2026-06-23T22:23:08Z",
-  "data_mode": "demo-synthetic",
-  "data_mode_reason": "Live Bundesbank/AFT/ECB endpoints unreachable in this environment (bot challenges); synthetic panel with real twin ISIN pairs, real coupons/maturities and an embedded greenium signal so the method is runnable and testable.",
+  "last_updated": "2026-06-24T18:24:40Z",
+  "data_mode": "live",
+  "data_mode_reason": "",
   "seed": 20260615,
   "sample": {
     "start": "2020-09-02",
@@ -21,162 +21,170 @@
       "end": "2022-12-31"
     }
   ],
-  "headline_greenium_bp": 3.02043447314503,
+  "headline_greenium_bp": 2.0907942848061283,
   "headline_ci_bp": [
-    2.863984160830946,
-    3.184808413020543
+    1.8263217060578938,
+    2.3865571053687575
   ],
-  "headline_n_obs": 8895,
-  "n_pairs": 9,
-  "n_pairs_positive": 9,
-  "panel_raw_bp": 3.0204344731450297,
-  "panel_adjusted_bp": 1.1755338893158134,
-  "liquidity_gap_bp": 1.8449005838292163,
-  "france_nss_bp": 0.5979789662028028,
-  "compression_bp_per_yr": 0.014223218779889238,
-  "placebo_conv_residual_bp": -2.1812034266860813e-09,
+  "headline_n_obs": 8566,
+  "n_pairs": 10,
+  "n_pairs_positive": 10,
+  "panel_raw_bp": 2.090794284806128,
+  "panel_adjusted_bp": -1.0026267573439596,
+  "liquidity_gap_bp": 3.093421042150087,
+  "compression_bp_per_yr": -0.6006107138907747,
+  "placebo_conv_residual_bp": 1.3584849245025783e-07,
   "panel_meta": {
     "quote_basis": "annual_actual_actual",
     "convention_note": "Both twin legs share the Bundesbank annual / actual-actual yield basis; greenium = conv - green is a like-for-like difference (no convention mismatch).",
-    "pre_issue_obs_dropped": 0,
-    "n_pairs": 9,
-    "n_days": 1509,
+    "pre_issue_obs_dropped": 1139,
+    "n_pairs": 10,
+    "n_days": 1458,
     "date_span": [
-      "2020-09-02",
+      "2020-09-07",
       "2026-06-15"
     ],
     "coverage": [
       {
         "pair_id": "green_2025_5y",
         "leg": "conv",
-        "n": 1148,
-        "start": "2021-05-18",
-        "end": "2025-10-09"
+        "n": 1246,
+        "start": "2020-11-04",
+        "end": "2025-10-07"
       },
       {
         "pair_id": "green_2025_5y",
         "leg": "green",
-        "n": 1148,
-        "start": "2021-05-18",
-        "end": "2025-10-09"
+        "n": 1246,
+        "start": "2020-11-04",
+        "end": "2025-10-07"
       },
       {
         "pair_id": "green_2027_5y",
         "leg": "conv",
-        "n": 985,
-        "start": "2022-09-06",
+        "n": 949,
+        "start": "2022-09-05",
         "end": "2026-06-15"
       },
       {
         "pair_id": "green_2027_5y",
         "leg": "green",
-        "n": 985,
-        "start": "2022-09-06",
+        "n": 949,
+        "start": "2022-09-05",
         "end": "2026-06-15"
       },
       {
-        "pair_id": "green_2029_7y",
+        "pair_id": "green_2029_5y",
         "leg": "conv",
-        "n": 725,
-        "start": "2023-09-05",
+        "n": 533,
+        "start": "2024-04-30",
         "end": "2026-06-15"
       },
       {
-        "pair_id": "green_2029_7y",
+        "pair_id": "green_2029_5y",
         "leg": "green",
-        "n": 725,
-        "start": "2023-09-05",
+        "n": 530,
+        "start": "2024-04-30",
         "end": "2026-06-15"
       },
       {
         "pair_id": "green_2030_10y",
         "leg": "conv",
-        "n": 1509,
-        "start": "2020-09-02",
+        "n": 1458,
+        "start": "2020-09-07",
         "end": "2026-06-15"
       },
       {
         "pair_id": "green_2030_10y",
         "leg": "green",
-        "n": 1509,
-        "start": "2020-09-02",
+        "n": 1458,
+        "start": "2020-09-07",
         "end": "2026-06-15"
       },
       {
         "pair_id": "green_2031_10y",
         "leg": "conv",
-        "n": 1244,
+        "n": 1203,
         "start": "2021-09-08",
         "end": "2026-06-15"
       },
       {
         "pair_id": "green_2031_10y",
         "leg": "green",
-        "n": 1244,
+        "n": 1203,
         "start": "2021-09-08",
         "end": "2026-06-15"
       },
       {
         "pair_id": "green_2033_10y",
         "leg": "conv",
-        "n": 890,
-        "start": "2023-01-17",
+        "n": 785,
+        "start": "2023-04-28",
         "end": "2026-06-15"
       },
       {
         "pair_id": "green_2033_10y",
         "leg": "green",
-        "n": 890,
-        "start": "2023-01-17",
+        "n": 782,
+        "start": "2023-04-28",
+        "end": "2026-06-15"
+      },
+      {
+        "pair_id": "green_2035_10y",
+        "leg": "conv",
+        "n": 297,
+        "start": "2025-04-08",
+        "end": "2026-06-15"
+      },
+      {
+        "pair_id": "green_2035_10y",
+        "leg": "green",
+        "n": 294,
+        "start": "2025-04-08",
         "end": "2026-06-15"
       },
       {
         "pair_id": "green_2041_15y",
         "leg": "conv",
-        "n": 75,
-        "start": "2026-03-03",
+        "n": 69,
+        "start": "2026-03-06",
         "end": "2026-06-15"
       },
       {
         "pair_id": "green_2041_15y",
         "leg": "green",
-        "n": 75,
-        "start": "2026-03-03",
+        "n": 69,
+        "start": "2026-03-06",
         "end": "2026-06-15"
       },
       {
-        "pair_id": "green_2050_30y",
+        "pair_id": "green_2050_29y",
         "leg": "conv",
-        "n": 1509,
-        "start": "2020-09-02",
+        "n": 1285,
+        "start": "2021-05-14",
         "end": "2026-06-15"
       },
       {
-        "pair_id": "green_2050_30y",
+        "pair_id": "green_2050_29y",
         "leg": "green",
-        "n": 1509,
-        "start": "2020-09-02",
+        "n": 1283,
+        "start": "2021-05-14",
         "end": "2026-06-15"
       },
       {
         "pair_id": "green_2053_30y",
         "leg": "conv",
-        "n": 810,
-        "start": "2023-05-09",
+        "n": 752,
+        "start": "2023-06-16",
         "end": "2026-06-15"
       },
       {
         "pair_id": "green_2053_30y",
         "leg": "green",
-        "n": 810,
-        "start": "2023-05-09",
+        "n": 752,
+        "start": "2023-06-16",
         "end": "2026-06-15"
       }
-    ],
-    "france": {
-      "available": true,
-      "n_oats": 4,
-      "n_days": 1509
-    }
+    ]
   }
 }

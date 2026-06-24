@@ -43,8 +43,8 @@
 <header>
   <h1>Green-Bond Greenium</h1>
   <div class="sub">How much less does sustainability-labelled sovereign debt yield than its
-    <b>identical conventional twin</b>? German green Bunds (matched twins) with French green
-    OATs as corroboration. Greenium = (conventional − green) yield, in basis points.</div>
+    <b>identical conventional twin</b>? German green Bunds matched to their conventional twins.
+    Greenium = (conventional − green) yield, in basis points.</div>
 </header>
 <div class="wrap">
   <div id="banner" class="banner"></div>
@@ -85,13 +85,6 @@
       <div id="rawadj" style="height:230px"></div>
     </div>
 
-    <div class="card">
-      <h2>Germany vs France</h2>
-      <div class="hint">German twin (model-free) and FE-adjusted vs the French NSS fitted-curve
-        estimate (noisier, independent issuer).</div>
-      <div id="defr" style="height:230px"></div>
-    </div>
-
     <div class="card full">
       <h2>By-pair greenium &amp; sign stability</h2>
       <div class="hint">A genuine greenium should be consistently signed across pairs.</div>
@@ -118,7 +111,7 @@ const L={paper_bgcolor:'#15201b',plot_bgcolor:'#15201b',font:{color:'#e7f3ec',si
 const CFG={displayModeBar:false,responsive:true};
 async function J(p){const r=await fetch(p,{cache:'no-store'});if(!r.ok)throw new Error(p);return r.json();}
 
-let FACTS,TWIN,PANEL,NSS,DYN,REFU;
+let FACTS,TWIN,PANEL,DYN,REFU;
 
 function gauge(v,lo,hi){
   Plotly.react('headgauge',[{type:'indicator',mode:'gauge+number',value:v,
@@ -178,18 +171,6 @@ function drawRawAdj(){
         text:'liquidity premium ≈ '+FMT(PANEL.liquidity_gap_bp)+' bp',font:{color:'#f1c40f'}}]}),CFG);
 }
 
-function drawDEFR(){
-  const xs=['DE twin (raw)','DE panel (adj)'],ys=[TWIN.headline.mean_bp,PANEL.greenium_adjusted.greenium_bp],
-    lo=[TWIN.headline.mean_bp-TWIN.headline.ci_lo_bp,PANEL.greenium_adjusted.greenium_bp-PANEL.greenium_adjusted.ci_lo_bp],
-    hi=[TWIN.headline.ci_hi_bp-TWIN.headline.mean_bp,PANEL.greenium_adjusted.ci_hi_bp-PANEL.greenium_adjusted.greenium_bp];
-  if(NSS && NSS.available){const g=NSS.greenium_nss;xs.push('FR NSS curve');ys.push(g.mean_bp);
-    lo.push(g.mean_bp-g.ci_lo_bp);hi.push(g.ci_hi_bp-g.mean_bp);}
-  Plotly.react('defr',[{type:'bar',x:xs,y:ys,marker:{color:['#2ecc71','#4ea1ff','#e67e22']},
-    error_y:{type:'data',symmetric:false,array:hi,arrayminus:lo,color:'#9ab4a7'},
-    text:ys.map(v=>FMT(v)+' bp'),textposition:'outside'}],
-    Object.assign({},L,{yaxis:{title:'greenium (bp)',gridcolor:'#28413a',rangemode:'tozero'}}),CFG);
-}
-
 function drawPairTab(){
   let h='<thead><tr><th>Pair</th><th>Maturity (y)</th><th>Greenium (bp)</th>'
        +'<th>95% CI</th><th>% days &gt;0</th><th>n</th></tr></thead><tbody>';
@@ -229,14 +210,14 @@ function drawRefu(){
 
 async function boot(){
   FACTS=await J('./data/facts.json');
-  [TWIN,PANEL,NSS,DYN,REFU]=await Promise.all([
+  [TWIN,PANEL,DYN,REFU]=await Promise.all([
     J('./data/twin.json'),J('./data/panel.json'),
-    J('./data/nss.json').catch(()=>null),J('./data/dynamics.json').catch(()=>null),
+    J('./data/dynamics.json').catch(()=>null),
     J('./data/refutation.json')]);
 
   if(FACTS.data_mode==='demo-synthetic'){
     const b=document.getElementById('banner');b.style.display='block';
-    b.innerHTML='<b>Demo mode (synthetic data).</b> Live Bundesbank/AFT/ECB endpoints were '
+    b.innerHTML='<b>Demo mode (synthetic data).</b> The live Bundesbank workbook archive was '
       +'unreachable, so this shows a deterministic synthetic panel (real twin ISIN pairs + real '
       +'coupons/maturities + an embedded greenium signal) to demonstrate the method. Numbers are '
       +'illustrative, not empirical.';
@@ -255,7 +236,7 @@ async function boot(){
     const o=document.createElement('option');o.value=k;o.textContent=k;sel.appendChild(o);});
   sel.addEventListener('change',()=>drawTS(sel.value));
 
-  drawTerm();drawTS('');drawRawAdj();drawDEFR();drawPairTab();drawRefu();
+  drawTerm();drawTS('');drawRawAdj();drawPairTab();drawRefu();
 
   const tr=DYN&&DYN.compression_trend;
   document.getElementById('foot').innerHTML=
