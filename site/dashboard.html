@@ -104,7 +104,8 @@
 </div>
 
 <script>
-const FMT=(x,d=2)=>(x===null||x===undefined||Number.isNaN(x))?"—":Number(x).toFixed(d);
+const FMT=(x,d=2)=>{if(x===null||x===undefined||Number.isNaN(x))return "—";
+  const s=Number(x).toFixed(d);return /^-0\.?0*$/.test(s)?s.slice(1):s;};
 const L={paper_bgcolor:'#15201b',plot_bgcolor:'#15201b',font:{color:'#e7f3ec',size:11},
   margin:{l:50,r:14,t:10,b:38},legend:{orientation:'h',y:1.14},
   xaxis:{gridcolor:'#28413a'},yaxis:{gridcolor:'#28413a'}};
@@ -155,7 +156,7 @@ function drawTS(pair){
       line:{color:'#4ea1ff',width:1.4}});
   }
   Plotly.react('ts',tr,Object.assign({},L,{shapes:stressShapes(),
-    yaxis:{title:'greenium (bp)',gridcolor:'#28413a'}}),CFG);
+    xaxis:{gridcolor:'#28413a'},yaxis:{title:'greenium (bp)',gridcolor:'#28413a'}}),CFG);
 }
 
 function drawRawAdj(){
@@ -168,6 +169,7 @@ function drawRawAdj(){
     text:[FMT(r.greenium_bp)+' bp',FMT(a.greenium_bp)+' bp'],textposition:'outside',
     textfont:{color:'#e7f3ec'}}],
     Object.assign({},L,{margin:{l:50,r:14,t:28,b:38},
+      xaxis:{type:'category',gridcolor:'#28413a'},
       yaxis:{title:'greenium (bp)',gridcolor:'#28413a',zeroline:true,zerolinecolor:'#5b7'},
       annotations:[{xref:'paper',yref:'paper',x:0.5,y:1,yanchor:'bottom',showarrow:false,
         text:'liquidity premium ≈ '+FMT(PANEL.liquidity_gap_bp)+' bp',font:{color:'#f1c40f'}}]}),CFG);
@@ -201,12 +203,13 @@ function drawRefu(){
     rows.push(['greenium at equal liquidity',{mean_bp:lo.greenium_at_equal_liquidity_bp,
       ci_lo_bp:lo.ci_lo_bp,ci_hi_bp:lo.ci_hi_bp},'#4ea1ff']);}
   Plotly.react('refu',[{type:'bar',orientation:'h',cliponaxis:false,
-    y:rows.map(r=>r[0]),x:rows.map(r=>r[1].mean_bp),marker:{color:rows.map(r=>r[2])},
+    y:rows.map(r=>r[0]+'   '+FMT(r[1].mean_bp)+' bp'),
+    x:rows.map(r=>r[1].mean_bp),marker:{color:rows.map(r=>r[2])},
+    hovertemplate:'%{x:.2f} bp<extra></extra>',
     error_x:{type:'data',symmetric:false,
       array:rows.map(r=>(r[1].ci_hi_bp??r[1].mean_bp)-r[1].mean_bp),
-      arrayminus:rows.map(r=>r[1].mean_bp-(r[1].ci_lo_bp??r[1].mean_bp)),color:'#5b7'},
-    text:rows.map(r=>FMT(r[1].mean_bp)+' bp'),textposition:'outside',textfont:{color:'#e7f3ec'}}],
-    Object.assign({},L,{margin:{l:14,r:54,t:10,b:34},
+      arrayminus:rows.map(r=>r[1].mean_bp-(r[1].ci_lo_bp??r[1].mean_bp)),color:'#5b7'}}],
+    Object.assign({},L,{margin:{l:14,r:40,t:10,b:34},
       yaxis:{automargin:true,gridcolor:'#28413a'},
       xaxis:{title:'bp',gridcolor:'#28413a',zeroline:true,zerolinecolor:'#5b7'}}),CFG);
 }
