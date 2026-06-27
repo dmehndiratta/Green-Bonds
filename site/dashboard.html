@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Green-Bond Greenium — live dashboard</title>
+<title>Green-Bond Greenium: live dashboard</title>
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
 <style>
   :root{--bg:#0f1714;--panel:#15201b;--ink:#e7f3ec;--mut:#9ab4a7;--line:#28413a;
@@ -63,7 +63,7 @@
 
     <div class="card">
       <h2>Greenium term structure</h2>
-      <div class="hint">Recent greenium (bp) vs current years-to-maturity — larger at the short end.</div>
+      <div class="hint">Recent greenium (bp) vs current years-to-maturity.</div>
       <div id="term" style="height:210px"></div>
     </div>
 
@@ -80,7 +80,7 @@
 
     <div class="card">
       <h2>Raw vs liquidity-adjusted</h2>
-      <div class="hint">Pair×date FE panel. The gap between raw and liquidity-adjusted IS the
+      <div class="hint">Pair×date FE panel. The gap between raw and liquidity-adjusted is the
         liquidity premium embedded in the raw spread.</div>
       <div id="rawadj" style="height:230px"></div>
     </div>
@@ -92,9 +92,9 @@
     </div>
 
     <div class="card full">
-      <h2>Refutation — placebo &amp; liquidity-only</h2>
+      <h2>Refutation: placebo &amp; liquidity-only</h2>
       <div class="hint">Placebo: a conventional bond's deviation from the conventional curve should be
-        ~0 (CI spans 0) — so the greenium is not a mechanical maturity/curve artefact. Green legs sit
+        ~0 (CI spans 0), so the greenium is not a mechanical maturity/curve artefact. Green legs sit
         below that curve. Liquidity-only: the greenium that survives at equal liquidity.</div>
       <div id="refu" style="height:240px"></div>
     </div>
@@ -161,13 +161,15 @@ function drawTS(pair){
 function drawRawAdj(){
   const r=PANEL.greenium_raw,a=PANEL.greenium_adjusted;
   Plotly.react('rawadj',[{type:'bar',x:['raw','liquidity-adjusted'],
-    y:[r.greenium_bp,a.greenium_bp],marker:{color:['#2ecc71','#4ea1ff']},
+    y:[r.greenium_bp,a.greenium_bp],marker:{color:['#2ecc71','#4ea1ff']},cliponaxis:false,
     error_y:{type:'data',symmetric:false,
       array:[r.ci_hi_bp-r.greenium_bp,a.ci_hi_bp-a.greenium_bp],
       arrayminus:[r.greenium_bp-r.ci_lo_bp,a.greenium_bp-a.ci_lo_bp],color:'#9ab4a7'},
-    text:[FMT(r.greenium_bp)+' bp',FMT(a.greenium_bp)+' bp'],textposition:'outside'}],
-    Object.assign({},L,{yaxis:{title:'greenium (bp)',gridcolor:'#28413a',rangemode:'tozero'},
-      annotations:[{x:0.5,y:Math.max(r.greenium_bp,a.greenium_bp),yshift:30,showarrow:false,
+    text:[FMT(r.greenium_bp)+' bp',FMT(a.greenium_bp)+' bp'],textposition:'outside',
+    textfont:{color:'#e7f3ec'}}],
+    Object.assign({},L,{margin:{l:50,r:14,t:28,b:38},
+      yaxis:{title:'greenium (bp)',gridcolor:'#28413a',zeroline:true,zerolinecolor:'#5b7'},
+      annotations:[{xref:'paper',yref:'paper',x:0.5,y:1,yanchor:'bottom',showarrow:false,
         text:'liquidity premium ≈ '+FMT(PANEL.liquidity_gap_bp)+' bp',font:{color:'#f1c40f'}}]}),CFG);
 }
 
@@ -198,13 +200,14 @@ function drawRefu(){
     const lo=REFU.liquidity_only;
     rows.push(['greenium at equal liquidity',{mean_bp:lo.greenium_at_equal_liquidity_bp,
       ci_lo_bp:lo.ci_lo_bp,ci_hi_bp:lo.ci_hi_bp},'#4ea1ff']);}
-  Plotly.react('refu',[{type:'bar',orientation:'h',
+  Plotly.react('refu',[{type:'bar',orientation:'h',cliponaxis:false,
     y:rows.map(r=>r[0]),x:rows.map(r=>r[1].mean_bp),marker:{color:rows.map(r=>r[2])},
     error_x:{type:'data',symmetric:false,
       array:rows.map(r=>(r[1].ci_hi_bp??r[1].mean_bp)-r[1].mean_bp),
       arrayminus:rows.map(r=>r[1].mean_bp-(r[1].ci_lo_bp??r[1].mean_bp)),color:'#5b7'},
-    text:rows.map(r=>FMT(r[1].mean_bp)+' bp'),textposition:'outside'}],
-    Object.assign({},L,{margin:{l:230,r:20,t:10,b:34},
+    text:rows.map(r=>FMT(r[1].mean_bp)+' bp'),textposition:'outside',textfont:{color:'#e7f3ec'}}],
+    Object.assign({},L,{margin:{l:14,r:54,t:10,b:34},
+      yaxis:{automargin:true,gridcolor:'#28413a'},
       xaxis:{title:'bp',gridcolor:'#28413a',zeroline:true,zerolinecolor:'#5b7'}}),CFG);
 }
 
@@ -236,7 +239,8 @@ async function boot(){
     const o=document.createElement('option');o.value=k;o.textContent=k;sel.appendChild(o);});
   sel.addEventListener('change',()=>drawTS(sel.value));
 
-  drawTerm();drawTS('');drawRawAdj();drawPairTab();drawRefu();
+  [drawTerm,()=>drawTS(''),drawRawAdj,drawPairTab,drawRefu]
+    .forEach(fn=>{try{fn();}catch(e){console.error('chart draw failed:',e);}});
 
   const tr=DYN&&DYN.compression_trend;
   document.getElementById('foot').innerHTML=
