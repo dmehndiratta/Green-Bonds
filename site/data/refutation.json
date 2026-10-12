@@ -3,16 +3,16 @@
   "seed": 20260615,
   "placebo": {
     "conventional_curve_residual": {
-      "mean_bp": 2.0728868774945515e-07,
-      "ci_lo_bp": -0.006201357692048854,
-      "ci_hi_bp": 0.006185894628879709,
+      "mean_bp": -4.1600038482640837e-08,
+      "ci_lo_bp": -0.006201560270548226,
+      "ci_hi_bp": 0.00618661835637827,
       "n": 8027,
       "ci_spans_zero": true
     },
     "green_curve_residual": {
-      "mean_bp": -1.9958179740103337,
-      "ci_lo_bp": -2.1705864623562765,
-      "ci_hi_bp": -1.8231918337200006,
+      "mean_bp": -1.995818173483291,
+      "ci_lo_bp": -2.1705863524631317,
+      "ci_hi_bp": -1.8231933388069084,
       "n": 8016,
       "ci_spans_zero": false
     },
@@ -28,12 +28,12 @@
   "liquidity_only": {
     "available": true,
     "spec": "(green_yield - conv_yield) ~ 1 + (log_amt_green - log_amt_conv)",
-    "intercept_pct": 0.007044009701583879,
-    "slope_on_logamt_gap": 0.02049605873729849,
-    "greenium_at_equal_liquidity_bp": -0.7044009701583879,
-    "ci_lo_bp": -4.630147351049348,
-    "ci_hi_bp": 3.221345410732572,
-    "intercept_p": 0.7331680333513564,
+    "intercept_pct": 0.007044009701583102,
+    "slope_on_logamt_gap": 0.020496058737298043,
+    "greenium_at_equal_liquidity_bp": -0.7044009701583102,
+    "ci_lo_bp": -4.630147351048904,
+    "ci_hi_bp": 3.221345410732283,
+    "intercept_p": 0.7331680333513608,
     "survives_liquidity": false
   },
   "sign_stability": {
